@@ -1,0 +1,4 @@
+Bundle-Name: bouki-hello-world
+Bundle-SymbolicName: com.rb.bouki.hello.world
+Bundle-Version: 1.0.0
+Export-Package: com.rb.bouki.hello.world.constants
