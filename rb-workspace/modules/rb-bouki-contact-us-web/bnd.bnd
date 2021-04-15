@@ -1,0 +1,4 @@
+Bundle-Name: rb-bouki-contact-us-web
+Bundle-SymbolicName: com.rb.bouki.contact.us.web
+Bundle-Version: 1.0.0
+Export-Package: com.rb.bouki.contact.us.web.constants

@@ -1,0 +1,10 @@
+Bundle-Name: rb-bouki-contact-us-api
+Bundle-SymbolicName: com.rb.bouki.contact.us.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.rb.bouki.contact.us.exception,\
+	com.rb.bouki.contact.us.model,\
+	com.rb.bouki.contact.us.service,\
+	com.rb.bouki.contact.us.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../rb-bouki-contact-us-service/service.xml

@@ -1,0 +1,4 @@
+Bundle-Name: rb-bouki-contact-us-admin
+Bundle-SymbolicName: com.rb.bouki.contact.us.admin
+Bundle-Version: 1.0.0
+Export-Package: com.rb.bouki.contact.us.admin.constants

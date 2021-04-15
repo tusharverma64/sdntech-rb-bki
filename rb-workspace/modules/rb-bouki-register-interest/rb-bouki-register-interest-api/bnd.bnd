@@ -1,0 +1,10 @@
+Bundle-Name: rb-bouki-register-interest-api
+Bundle-SymbolicName: com.rb.bouki.register.interest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.rb.bouki.register.interest.exception,\
+	com.rb.bouki.register.interest.model,\
+	com.rb.bouki.register.interest.service,\
+	com.rb.bouki.register.interest.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../rb-bouki-register-interest-service/service.xml

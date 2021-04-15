@@ -1,0 +1,6 @@
+Bundle-Name: rb-bouki-register-interest-service
+Bundle-SymbolicName: com.rb.bouki.register.interest.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true
+-dsannotations-options: inherit

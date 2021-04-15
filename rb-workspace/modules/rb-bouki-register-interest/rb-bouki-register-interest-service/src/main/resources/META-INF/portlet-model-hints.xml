@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.rb.bouki.register.interest.model.BoukiRegisterInterest">
+		<field name="id" type="long" />
+		<field name="countryCode" type="String" />
+		<field name="phoneNo" type="String" />
+		<field name="emailAddress" type="String">
+			<hint name="max-length">500</hint>
+		</field>
+		<field name="keepInform" type="boolean" />
+		<field name="createDate" type="Date" />
+		<field name="groupId" type="long" />
+		<field name="companyId " type="long" />
+	</model>
+</model-hints>
