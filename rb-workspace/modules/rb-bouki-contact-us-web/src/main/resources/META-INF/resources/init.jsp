@@ -24,3 +24,4 @@ ContactUsConfiguration contactUsConfiguration = (ContactUsConfiguration) renderR
 	     toEmail = portletPreferences.getValue("toEmail", contactUsConfiguration.toEmail());
     }
 %>
+

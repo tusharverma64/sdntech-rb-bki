@@ -5,6 +5,6 @@ package com.rb.bouki.register.interest.admin.constants;
  */
 public class RbBoukiRegisterInterestAdminPanelCategoryKeys {
 
-	public static final String CONTROL_PANEL_CATEGORY = "RbBoukiRegisterInterestAdmin";
+	public static final String CONTROL_PANEL_CATEGORY = "Bouki Admin";
 
 }

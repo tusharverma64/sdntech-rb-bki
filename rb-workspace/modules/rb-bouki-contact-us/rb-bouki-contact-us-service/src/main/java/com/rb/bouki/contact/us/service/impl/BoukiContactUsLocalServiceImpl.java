@@ -16,16 +16,13 @@ package com.rb.bouki.contact.us.service.impl;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.rb.bouki.contact.us.model.BoukiContactUs;
-import com.rb.bouki.contact.us.service.BoukiContactUsLocalService;
 import com.rb.bouki.contact.us.service.BoukiContactUsLocalServiceUtil;
 import com.rb.bouki.contact.us.service.base.BoukiContactUsLocalServiceBaseImpl;
 
 import java.util.Date;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 
 /**

@@ -8,7 +8,7 @@ import javax.portlet.Portlet;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 @Component(
 	immediate = true,

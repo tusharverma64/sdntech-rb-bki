@@ -1,8 +1,8 @@
-<%@ include file="/init.jsp" %>
+<%@ include file="init.jsp" %>
 
 <liferay-portlet:resourceURL var="myResourceURL" ></liferay-portlet:resourceURL>
 <h1><liferay-ui:message key="contactusheading-message-key" /></h1>
-<div id="messageRYI" class="hide">
+<div id="messagec" class="hide">
 		<p>
 		   <liferay-ui:message key="contactDescription-message-key" />
 		</p>
@@ -16,7 +16,9 @@
 
 		<button name="Send another message" class="btn"/>
 </div>
-<aui:form id="submitContactUsFrom">
+test  <%= toEmail %>
+<div id="submitContactUsFrom">
+<aui:form name="submitContactUsFrom" >
 	<aui:fieldset-group markupView="lexicon">
 		<aui:fieldset>
 			<aui:row>
@@ -41,7 +43,7 @@
 					</aui:input>
 				</aui:col>
 			</aui:row>
-			<aui:input label="toEmail" name="toEmail" type="hidden" value="${toEmail}" cssClass="toEmail"/>
+			<aui:input label="toEmail" name="toEmail" type="hidden" value="<%= toEmail %>" cssClass="toEmail"/>
 			<aui:row>
 				<aui:col width="100">
 					<aui:input label="Message" name="message" type="textarea" cssClass="message" >
@@ -56,6 +58,7 @@
 		<aui:button name="submitButton" type="submit" value="Submit"  onclick="callcontactUsServeResource()"/>
 	</aui:button-row>
 </aui:form>
+</div>
 <script type="text/javascript">
 	function callcontactUsServeResource(){
 	    AUI().use('aui-base','aui-io-request', function(A){
@@ -78,7 +81,7 @@
 	                   success: function() {
 	                	   var data=this.get('responseData');
 	                       if(data.message) {
-		                       A.one("#messageRYI").show();
+		                       A.one("#messagec").show();
 		                       A.one("#submitContactUsFrom").hide();
 	                       }
 	                   }

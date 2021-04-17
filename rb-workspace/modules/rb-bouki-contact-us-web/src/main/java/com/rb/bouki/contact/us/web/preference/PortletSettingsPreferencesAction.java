@@ -21,6 +21,14 @@ import org.osgi.service.component.annotations.Modified;
 import aQute.bnd.annotation.metatype.Configurable;
 
 
+/**
+ * The purpose of this class is setting up the configuration 
+ *
+ *
+ *
+ *@author Liferay
+ * 
+ */
 @Component(
 	configurationPid = RbBoukiContactUsWebPortletKeys.CONFIGURATION_ID,
 	configurationPolicy = ConfigurationPolicy.OPTIONAL, 
@@ -31,10 +39,8 @@ import aQute.bnd.annotation.metatype.Configurable;
 
 public class PortletSettingsPreferencesAction extends DefaultConfigurationAction {
 
-    private ContactUsConfiguration contactConfiguration;
+    private volatile ContactUsConfiguration contactConfiguration;
     
-    
-
     /*
      * This method is used to set the portlet preference
      *
@@ -48,11 +54,18 @@ public class PortletSettingsPreferencesAction extends DefaultConfigurationAction
 	    throws Exception {
 	String toEmail = ParamUtil.getString(actionRequest, "toEmail");
 	setPreference(actionRequest, "toEmail", toEmail);
-	actionRequest.setAttribute( "toEmail", toEmail);
-	
+	actionRequest.setAttribute("toEmail", toEmail);
 	super.processAction(portletConfig, actionRequest, actionResponse);
     }
 
+    /*
+     * This method is used to include the configuration
+     *
+     * @param portletConfig
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @throws Exception :
+     */
     @Override
     public void include(
         PortletConfig portletConfig, HttpServletRequest httpServletRequest,
@@ -67,9 +80,9 @@ public class PortletSettingsPreferencesAction extends DefaultConfigurationAction
 
     
     /**
-     * This method is used to {Please explain the usability of this method}
+     * This method is used to activate the proeprties
      *
-     * @param properties : {Please explain the usage of all the arguments}
+     * @param properties : objects
      */
     @Activate
     @Modified

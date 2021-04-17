@@ -1,10 +1,10 @@
 package com.rb.bouki.contact.us.admin.constants;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 public class RbBoukiContactUsAdminPanelCategoryKeys {
 
-	public static final String CONTROL_PANEL_CATEGORY = "Contact Us";
+	public static final String CONTROL_PANEL_CATEGORY = "Bouki Admin";
 
 }

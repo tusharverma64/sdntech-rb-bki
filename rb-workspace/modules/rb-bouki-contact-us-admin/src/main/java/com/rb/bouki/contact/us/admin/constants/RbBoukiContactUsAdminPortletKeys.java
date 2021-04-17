@@ -1,7 +1,7 @@
 package com.rb.bouki.contact.us.admin.constants;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 public class RbBoukiContactUsAdminPortletKeys {
 

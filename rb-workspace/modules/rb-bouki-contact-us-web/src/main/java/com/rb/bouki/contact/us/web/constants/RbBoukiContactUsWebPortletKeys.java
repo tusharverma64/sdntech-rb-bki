@@ -1,7 +1,7 @@
 package com.rb.bouki.contact.us.web.constants;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 public class RbBoukiContactUsWebPortletKeys {
 

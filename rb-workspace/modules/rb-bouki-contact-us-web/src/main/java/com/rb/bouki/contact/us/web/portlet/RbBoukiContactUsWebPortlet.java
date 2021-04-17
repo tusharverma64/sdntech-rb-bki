@@ -1,6 +1,5 @@
 package com.rb.bouki.contact.us.web.portlet;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
@@ -45,8 +44,6 @@ import org.osgi.service.component.annotations.Modified;
  * 
  */
 @Component(
-	configurationPid =
-		 RbBoukiContactUsWebPortletKeys.CONFIGURATION_ID,
 	immediate = true,
 	property = {
 		"com.liferay.portlet.display-category=Bouki",
@@ -63,6 +60,13 @@ import org.osgi.service.component.annotations.Modified;
 )
 public class RbBoukiContactUsWebPortlet extends MVCPortlet {
     
+    
+    Log _log = LogFactoryUtil.getLog(RbBoukiContactUsWebPortlet.class.getName());
+    
+    private volatile ContactUsConfiguration contactUsConfiguration;
+
+    private static final Configuration _configuration = ConfigurationFactoryUtil
+	    .getConfiguration(RbBoukiContactUsWebPortlet.class.getClassLoader(), "portlet");
     /*
      * This method is used to render the form
      *
@@ -71,15 +75,12 @@ public class RbBoukiContactUsWebPortlet extends MVCPortlet {
      * @throws IOException
      * @throws PortletException :
      */
+
     @Override
-    public void doView(RenderRequest renderRequest,
-            RenderResponse renderResponse) throws IOException, PortletException {
-
-            renderRequest.setAttribute(
-        	    ContactUsConfiguration.class.getName(),
-        	    contactUsConfiguration);
-
-            super.doView(renderRequest, renderResponse);
+    public void render(RenderRequest renderRequest, RenderResponse renderResponse)
+	    throws IOException, PortletException {
+	renderRequest.setAttribute(ContactUsConfiguration.class.getName(), contactUsConfiguration);
+	super.render(renderRequest, renderResponse);
     }
     
     /**
@@ -111,29 +112,31 @@ public class RbBoukiContactUsWebPortlet extends MVCPortlet {
 	final ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 	final String name = ParamUtil.getString(request, "name");
 	final String subject = ParamUtil.getString(request, "subject");
-	final String email = ParamUtil.getString(request, "email");
+	final String fromEmail = ParamUtil.getString(request, "email");
+	final String toEmail = ParamUtil.getString(request, "toEmail");
 	final String message = ParamUtil.getString(request, "message");
 	try {
-	    String toEmail = StringPool.BLANK;
-	    if (Validator.isNotNull(toEmail)) {
-		// toEmail = conf.toEmail();
-	    }
-	    String apiResponse = getResponseFromApi(toEmail, name, subject, email, message);
 
-	    BoukiContactUs boukiContactUs = BoukiContactUsLocalServiceUtil.createContactUs(toEmail, subject, name, message, themeDisplay.getCompanyId(),
-		    themeDisplay.getScopeGroupId(), apiResponse);
-	    
-	    if(Validator.isNotNull(boukiContactUs)) {
-		 JSONObject obj =  JSONFactoryUtil.createJSONObject();
-		 obj.put("message","Data Received Successfully");
-		 PrintWriter out=resourceResponse.getWriter();
-		 out.print(obj.toString());
- 	    }
-	    
+	    String apiResponse = getResponseFromApi(toEmail, name, subject, fromEmail, message);
+
+	    if (Validator.isNotNull(name) && Validator.isNotNull(subject) && Validator.isNotNull(fromEmail)
+		    && Validator.isNotNull(toEmail) && Validator.isNotNull(message)
+		    && Validator.isNotNull(apiResponse)) {
+		BoukiContactUs boukiContactUs = BoukiContactUsLocalServiceUtil.createContactUs(toEmail, subject, name,
+			message, themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), apiResponse);
+
+		if (Validator.isNotNull(boukiContactUs)) {
+		    JSONObject obj = JSONFactoryUtil.createJSONObject();
+		    obj.put("message", "Data Received Successfully");
+		    PrintWriter out = resourceResponse.getWriter();
+		    out.print(obj.toString());
+		}
+	    }
+
 	} catch (SystemException e) {
 	    _log.error(e.getMessage());
 	}
-	
+
 	super.serveResource(request, resourceResponse);
     }
 	/**
@@ -147,7 +150,7 @@ public class RbBoukiContactUsWebPortlet extends MVCPortlet {
 	 * @return : {Please explain the usage of all the arguments}
 	 */
 	private String getResponseFromApi(String toEmail, String name, String subject, String email, String message) {
-		String apiReponse = StringPool.BLANK;
+		String apiReponse = "true";
 //		final HttpClient client = HttpClientBuilder.create().build();
 //		try {
 //			HttpUriRequest post = new HttpGet(_configuration.get("api.url"));
@@ -176,9 +179,6 @@ public class RbBoukiContactUsWebPortlet extends MVCPortlet {
 		return apiReponse;
 	}
 
-    Log _log = LogFactoryUtil.getLog(RbBoukiContactUsWebPortlet.class.getName());
-    private volatile ContactUsConfiguration contactUsConfiguration;
-    private static final Configuration _configuration = ConfigurationFactoryUtil
-	    .getConfiguration(RbBoukiContactUsWebPortlet.class.getClassLoader(), "portlet");
+
 
 }
