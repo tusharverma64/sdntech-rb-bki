@@ -1,29 +1,31 @@
 package com.rb.bouki.register.interest.web.portlet;
 
-import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.rb.bouki.register.interest.model.BoukiRegisterInterest;
 import com.rb.bouki.register.interest.service.BoukiRegisterInterestLocalServiceUtil;
 import com.rb.bouki.register.interest.web.constants.RbBoukiRegisterInterestWebPortletKeys;
 
-import java.util.Date;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 @Component(
 	immediate = true,
@@ -44,33 +46,46 @@ public class RbBoukiRegisterInterestWebPortlet extends MVCPortlet {
     
     Log _log = LogFactoryUtil.getLog(RbBoukiRegisterInterestWebPortlet.class.getName());
 
-    public void submitRYIFrom(ActionRequest request, ActionResponse response) {
+    /*
+     * This method is used to handle ajax calling
+     *
+     * @param resourceRequest
+     * 
+     * @param resourceResponse
+     * 
+     * @throws IOException
+     * 
+     * @throws PortletException
+     */
+    @Override
+    public void serveResource(ResourceRequest request, ResourceResponse resourceResponse)
+	    throws IOException, PortletException {
+
+	_log.debug("This is serve resource method....");
+
 	final ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 	final String phoneNumber = ParamUtil.getString(request, "phone_number");
 	final String countryCode = ParamUtil.getString(request, "countryCode");
 	final String email = ParamUtil.getString(request, "email");
 	final Boolean keepInform = ParamUtil.getBoolean(request, "keepInform");
 	try {
-	    final Long id = CounterLocalServiceUtil.increment(BoukiRegisterInterest.class.getName());
-	    BoukiRegisterInterest registerInterest = BoukiRegisterInterestLocalServiceUtil
-		    .createBoukiRegisterInterest(id);
-	    registerInterest.setEmailAddress(email);
-	    registerInterest.setPhoneNo(phoneNumber);
-	    registerInterest.setCreateDate(new Date());
-	    registerInterest.setKeepInform(keepInform);
-	    registerInterest.setCountryCode(countryCode);
-	    registerInterest.setCompanyId(themeDisplay.getCompanyId());
-	    registerInterest.setGroupId(themeDisplay.getScopeGroupId());
+	    if (Validator.isNotNull(phoneNumber) && Validator.isNotNull(countryCode) && Validator.isNotNull(keepInform)
+		    && Validator.isNotNull(email)) {
+		BoukiRegisterInterest boukiRegisterInterest = BoukiRegisterInterestLocalServiceUtil
+			.createRegisterInterest(email, phoneNumber, keepInform, countryCode,
+				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId());
 
-	    BoukiRegisterInterestLocalServiceUtil.addBoukiRegisterInterest(registerInterest);
-	    response.getRenderParameters().setValue("mvcPath", "/success.jsp");
-	    SessionMessages.add(request,
-		    PortalUtil.getPortletId(request) + SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
+		if (Validator.isNotNull(boukiRegisterInterest)) {
+		    JSONObject obj = JSONFactoryUtil.createJSONObject();
+		    obj.put("message", "Data Received Successfully");
+		    PrintWriter out = resourceResponse.getWriter();
+		    out.print(obj.toString());
+		}
+	    }
 	} catch (SystemException e) {
 	    _log.error(e.getMessage());
-	    SessionMessages.add(request,
-		    PortalUtil.getPortletId(request) + SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
 	}
-
+	
+	super.serveResource(request, resourceResponse);
     }
 }

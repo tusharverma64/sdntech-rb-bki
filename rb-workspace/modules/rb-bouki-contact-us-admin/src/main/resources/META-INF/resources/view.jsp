@@ -15,10 +15,10 @@
 							    <aui:input label="Search" name="Search" type="text" />
 							</aui:col>
 							<aui:col width="20">
-							    <button type="submit"><i class="fa fa-search"></i></button>
+							    <button type="submit"><i class="fas fa-search"></i></button>
 							</aui:col>
 							<aui:col width="20">
-							    <aui:button name="Reset" type="submit" value="Reset" />
+							    <aui:button name="Reset" type="reset" value="Reset" />
 							</aui:col>
 						</aui:row>
 						<aui:row>
