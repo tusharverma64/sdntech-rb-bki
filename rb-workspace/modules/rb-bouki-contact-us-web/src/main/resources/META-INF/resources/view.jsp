@@ -16,9 +16,7 @@
 
 		<button name="Send another message" class="btn"/>
 </div>
-test  <%= toEmail %>
 <div id="submitContactUsFrom">
-<aui:form name="submitContactUsFrom" >
 	<aui:fieldset-group markupView="lexicon">
 		<aui:fieldset>
 			<aui:row>
@@ -57,7 +55,6 @@ test  <%= toEmail %>
 	<aui:button-row>
 		<aui:button name="submitButton" type="submit" value="Submit"  onclick="callcontactUsServeResource()"/>
 	</aui:button-row>
-</aui:form>
 </div>
 <script type="text/javascript">
 	function callcontactUsServeResource(){

@@ -44,6 +44,8 @@ import org.osgi.service.component.annotations.Modified;
  * 
  */
 @Component(
+	configurationPid =
+		 RbBoukiContactUsWebPortletKeys.CONFIGURATION_ID,
 	immediate = true,
 	property = {
 		"com.liferay.portlet.display-category=Bouki",
@@ -130,6 +132,8 @@ public class RbBoukiContactUsWebPortlet extends MVCPortlet {
 		    obj.put("message", "Data Received Successfully");
 		    PrintWriter out = resourceResponse.getWriter();
 		    out.print(obj.toString());
+		    include("/jsp/loadResult.jsp", request, resourceResponse);
+
 		}
 	    }
 

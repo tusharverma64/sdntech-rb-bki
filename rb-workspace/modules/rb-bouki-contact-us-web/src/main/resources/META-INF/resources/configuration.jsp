@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%@page import="com.rb.bouki.contact.us.web.preference.ContactUsConfiguration"%>
 <%@page import="com.liferay.petra.string.StringPool"%>
 <%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
@@ -8,6 +9,7 @@
  
 <div class="container-fluid">
 	<aui:form action="<%=configurationActionURL%>" method="post" name="fm">
+    <aui:input name="<%=Constants.CMD%>" type="hidden" value="<%=Constants.UPDATE%>" />
 
     <aui:input name="redirect" type="hidden"    value="<%=configurationRenderURL%>" />
 	 	<aui:fieldset-group markupView="lexicon">

@@ -16,10 +16,18 @@ package com.rb.bouki.register.interest.service.impl;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Order;
+import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.rb.bouki.register.interest.model.BoukiRegisterInterest;
 import com.rb.bouki.register.interest.service.base.BoukiRegisterInterestLocalServiceBaseImpl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -43,6 +51,7 @@ import org.osgi.service.component.annotations.Component;
 public class BoukiRegisterInterestLocalServiceImpl
 	extends BoukiRegisterInterestLocalServiceBaseImpl {
 
+    private static final String CREATEDATE = "createDate";
 
     /**
      * This method is used to create regiter Interest
@@ -68,6 +77,35 @@ public class BoukiRegisterInterestLocalServiceImpl
 	registerInterest.setGroupId(groupId);
 
 	return boukiRegisterInterestLocalService.addBoukiRegisterInterest(registerInterest);
+    }
+    
+    
+    /**
+     * This method is used to get the sql dynamic query
+     *
+     * @param searchText
+     * @param fromDate
+     * @param toDate
+     * @param locale
+     * @return
+     */
+    public List<BoukiRegisterInterest> getQueryResult(String searchText, String fromDate, String toDate,
+	    Locale locale) {
+	DynamicQuery query = boukiRegisterInterestLocalService.dynamicQuery();
+	if (Validator.isNotNull(fromDate) && Validator.isNotNull(toDate)) {
+	    query.add(RestrictionsFactoryUtil.sqlRestriction(CREATEDATE + " >= '" + fromDate + "'"));
+	    query.add(RestrictionsFactoryUtil.sqlRestriction(CREATEDATE + " <= '" + toDate + "'"));
+	}
+	if (Validator.isNotNull(searchText)) {
+	    Criterion criterion = null;
+	    criterion = RestrictionsFactoryUtil.like("emailAddress", "%" + searchText + "%");
+	    query.add(criterion);
+	}
+	Order order = OrderFactoryUtil.desc(CREATEDATE);
+	query.addOrder(order);
+
+	return boukiRegisterInterestLocalService.dynamicQuery(query);
+
     }
     
     

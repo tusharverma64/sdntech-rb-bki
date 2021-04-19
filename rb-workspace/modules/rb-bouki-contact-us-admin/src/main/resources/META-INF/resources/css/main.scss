@@ -1,2 +1,10 @@
-.rb-bouki-contact-us-admin {
+
+
+.contact-message {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hidden {
+  display : none ;
 }

@@ -17,7 +17,7 @@
 	   <liferay-ui:message key="contactDescription-message-key" />
 	</p>
 </div>
-<aui:form id="submitRYIFrom">
+<div id="submitRYIFrom">
 	<aui:fieldset-group markupView="lexicon">
 	<p> <liferay-ui:message key="register-message-key" /></p>
 		<aui:fieldset>
@@ -53,8 +53,7 @@
 	<aui:button-row>
 		<aui:button name="submitButton" type="submit" value="Submit" onclick="callServeResource()" />
 	</aui:button-row>
-</aui:form>
-
+</div>
 <script type="text/javascript">
 	function callServeResource(){
 	    AUI().use('aui-base','aui-io-request', function(A){
