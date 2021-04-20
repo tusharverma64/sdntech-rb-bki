@@ -2,6 +2,10 @@ package com.rb.bouki.contact.us.admin.portlet;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -13,16 +17,19 @@ import com.rb.bouki.contact.us.admin.constants.RbBoukiContactUsAdminPortletKeys;
 import com.rb.bouki.contact.us.model.BoukiContactUs;
 import com.rb.bouki.contact.us.service.BoukiContactUsLocalServiceUtil;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -53,7 +60,7 @@ import org.osgi.service.component.annotations.Component;
 )
 public class RbBoukiContactUsAdminPortlet extends MVCPortlet {
 
-    Log _log = LogFactoryUtil.getLog(RbBoukiContactUsAdminPortlet.class.getName());
+    Log logger = LogFactoryUtil.getLog(RbBoukiContactUsAdminPortlet.class.getName());
 
     private static final String CONTACTUSLIST = "contactUsList";
     private static final String FROMDATE = "fromDate";
@@ -78,10 +85,10 @@ public class RbBoukiContactUsAdminPortlet extends MVCPortlet {
 	String searchText = ParamUtil.getString(renderRequest, SEARCH_TEXT);
 	String fromDate = ParamUtil.getString(renderRequest, FROMDATE);
 	String toDate = ParamUtil.getString(renderRequest, TODATE);
-	if (_log.isDebugEnabled()) {
-	    _log.debug("SearchText :" + searchText);
-	    _log.debug("fromDate :" + fromDate);
-	    _log.debug("toDate :" + toDate);
+	if (logger.isDebugEnabled()) {
+	    logger.debug("SearchText :" + searchText);
+	    logger.debug("fromDate :" + fromDate);
+	    logger.debug("toDate :" + toDate);
 	}
 	List<BoukiContactUs> contactUsList = Collections.emptyList();
 	try {
@@ -89,10 +96,11 @@ public class RbBoukiContactUsAdminPortlet extends MVCPortlet {
 		contactUsList = BoukiContactUsLocalServiceUtil.getQueryResult(searchText, fromDate, toDate,
 			themeDisplay.getLocale());
 	    } else {
-		contactUsList = BoukiContactUsLocalServiceUtil.getBoukiContactUses(-1, -1);
+		contactUsList = BoukiContactUsLocalServiceUtil.getBoukiContactUses(QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 	    }
 	} catch (Exception e) {
-	    _log.error(e.getMessage());
+	    logger.error(e.getMessage());
 	}
 
 	renderRequest.setAttribute(CONTACTUSLIST, contactUsList);
@@ -103,34 +111,48 @@ public class RbBoukiContactUsAdminPortlet extends MVCPortlet {
 
 	super.doView(renderRequest, renderResponse);
     }
-
-    /**
-     * This method is used to {Please explain the usability of this method}
+    
+    /*
+     * This method is used to serve resource
      *
-     * @param actionRequest
-     * @param actionResponse : {Please explain the usage of all the arguments}
+     * @param resourceRequest
+     * @param resourceResponse
+     * @throws IOException
+     * @throws PortletException 
      */
-    public void exportContactUsResults(ActionRequest actionRequest, ActionResponse actionResponse) {
-	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	String searchText = ParamUtil.getString(actionRequest, SEARCH_TEXT);
-	String fromDate = ParamUtil.getString(actionRequest, FROMDATE);
-	String toDate = ParamUtil.getString(actionRequest, TODATE);
+    @Override
+    public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+            throws IOException, PortletException {
+	ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+	String searchText = ParamUtil.getString(resourceRequest, SEARCH_TEXT);
+	String fromDate = ParamUtil.getString(resourceRequest, FROMDATE);
+	String toDate = ParamUtil.getString(resourceRequest, TODATE);
 
 	List<BoukiContactUs> contactUsList = Collections.emptyList();
 	try {
 	    contactUsList = BoukiContactUsLocalServiceUtil.getQueryResult(searchText, fromDate, toDate,
 		    themeDisplay.getLocale());
 	} catch (Exception e) {
-	    _log.error(e.getMessage());
+	    logger.error(e.getMessage());
 	}
 
-	actionRequest.setAttribute(CONTACTUSLIST, contactUsList);
-//	try {
+	resourceRequest.setAttribute(CONTACTUSLIST, contactUsList);
+	resourceRequest.setAttribute(FROMDATE, fromDate);
+	resourceRequest.setAttribute(TODATE, toDate);
+	resourceRequest.setAttribute(SEARCH_TEXT, searchText);
+	
+	
+	
+
+	try {
+
+	    File file = File.createTempFile("contactUsReports" + new Date().getTime(), ".xlsx");
+
+	    if (logger.isDebugEnabled()) {
+		logger.debug("Temporary File absolute Path::" + file.getAbsoluteFile());
+	    }
 //	    XSSFWorkbook workbook = new XSSFWorkbook();
 //	    XSSFSheet sheet = workbook.createSheet("Report");
-//
-//
-//	    List<BoukiContactUs> contactUsList = getQueryResult(searchText,fromDate,toDate);
 //
 //	    int rowCount = 0;
 //	    int columnCount = 0;
@@ -145,15 +167,32 @@ public class RbBoukiContactUsAdminPortlet extends MVCPortlet {
 //		cell.setCellValue(contactUs.getEmailAddress());
 //
 //	    }
-//
+
 //	    try (FileOutputStream outputStream = new FileOutputStream(
 //		    "contactUsReports" + new Date().getTime() + ".xlsx")) {
 //		workbook.write(outputStream);
 //	    }
-//	} catch (Exception e) {
-//
-//	}
+	} catch (Exception e) {
+	    logger.error("Error generating the excel File" + e.getMessage());
+
+	}
+	
+	// generating out put
+	JSONObject obj = JSONFactoryUtil.createJSONObject();
+	obj.put(RbBoukiContactUsAdminPortletKeys.MESSAGE,
+		LanguageUtil.get(themeDisplay.getLocale(), RbBoukiContactUsAdminPortletKeys.DATA_SAVED_SUCCESSFULLY));
+	PrintWriter out = resourceResponse.getWriter();
+	out.print(obj.toString());
+
+	super.serveResource(resourceRequest, resourceResponse);
     }
+
+    /**
+     * This method is used to 
+     *
+     * @return 
+     */
+    @SuppressWarnings("unchecked")
     public List<DropdownItem> getActionDropdownItems() {
 	return DropdownItemList.of(() -> {
 	    DropdownItem dropdownItem = new DropdownItem();

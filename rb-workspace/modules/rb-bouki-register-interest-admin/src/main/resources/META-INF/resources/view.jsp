@@ -14,29 +14,33 @@ List<BoukiRegisterInterest> list =  (List<BoukiRegisterInterest>) renderRequest.
 	<aui:fieldset-group markupView="lexicon">
 		<aui:fieldset>
 			<aui:row>
-			   	    <aui:col width="20">
-					<aui:input label="From Date" name="fromDate" type="date" value="${fromDate}" >
+			    <aui:col width="25">
+					<aui:input  inlineLabel="true" label="From Date" name="fromDate" type="date" value="${fromDate}" >
 					  <aui:validator name="date"/>
 					</aui:input>
 				</aui:col>
-				<aui:col width="20">
-					<aui:input label="To Date" name="toDate" type="date" value="${toDate}"  >
+				<aui:col width="25">
+					<aui:input  inlineLabel="true" label="To Date" name="toDate" type="date" value="${toDate}"  >
 					  <aui:validator name="date"/>
 					</aui:input>
 				</aui:col>
-		        <aui:col width="20">
-				    <aui:input label="Search" name="searchText" type="text" value="${searchText}"/>
-				</aui:col>
-				<aui:col width="20">
-				    <button type="submit"><i class="fa fa-search"></i></button>
+		        <aui:col width="30">
+				    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="<portlet:namespace/>searchText"  value="${searchText}">
+                           <div class="input-group-btn">
+                               <button class="btn btn-default btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                               </button>
+                           </div>
+                      </div>
 				</aui:col>
 				<aui:col width="20">
 				    <aui:button name="Reset" type="reset" value="Reset" />
 				</aui:col>
 			</aui:row>
 			<aui:row>
-			    <aui:col width="100">
-				    <aui:button name="export" type="submit" value="Export" />
+			    <aui:col width="80">
+				    <aui:button name="export" type="submit" cssClass="pull-right" value="Export" />
 				</aui:col>
 			</aui:row>
 		</aui:fieldset>

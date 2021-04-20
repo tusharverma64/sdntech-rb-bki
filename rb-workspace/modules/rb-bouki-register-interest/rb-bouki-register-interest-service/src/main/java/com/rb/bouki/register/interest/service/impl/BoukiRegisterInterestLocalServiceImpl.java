@@ -14,10 +14,10 @@
 
 package com.rb.bouki.register.interest.service.impl;
 
-import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Order;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -66,8 +66,8 @@ public class BoukiRegisterInterestLocalServiceImpl
      */
     public BoukiRegisterInterest createRegisterInterest(String email, String phoneNumber, Boolean keepInform,
 	    String countryCode, Long companyId, Long groupId) {
-	final Long id = CounterLocalServiceUtil.increment(BoukiRegisterInterest.class.getName());
-	BoukiRegisterInterest registerInterest = boukiRegisterInterestLocalService.createBoukiRegisterInterest(id);
+	final Long id = counterLocalService.increment(BoukiRegisterInterest.class.getName());
+	BoukiRegisterInterest registerInterest = boukiRegisterInterestPersistence.create(id);
 	registerInterest.setEmailAddress(email);
 	registerInterest.setPhoneNo(phoneNumber);
 	registerInterest.setCreateDate(new Date());
@@ -76,7 +76,7 @@ public class BoukiRegisterInterestLocalServiceImpl
 	registerInterest.setCompanyId(companyId);
 	registerInterest.setGroupId(groupId);
 
-	return boukiRegisterInterestLocalService.addBoukiRegisterInterest(registerInterest);
+	return boukiRegisterInterestPersistence.update(registerInterest);
     }
     
     
@@ -91,7 +91,7 @@ public class BoukiRegisterInterestLocalServiceImpl
      */
     public List<BoukiRegisterInterest> getQueryResult(String searchText, String fromDate, String toDate,
 	    Locale locale) {
-	DynamicQuery query = boukiRegisterInterestLocalService.dynamicQuery();
+	DynamicQuery query = DynamicQueryFactoryUtil.forClass(BoukiRegisterInterest.class, getClassLoader());
 	if (Validator.isNotNull(fromDate) && Validator.isNotNull(toDate)) {
 	    query.add(RestrictionsFactoryUtil.sqlRestriction(CREATEDATE + " >= '" + fromDate + "'"));
 	    query.add(RestrictionsFactoryUtil.sqlRestriction(CREATEDATE + " <= '" + toDate + "'"));
@@ -104,7 +104,7 @@ public class BoukiRegisterInterestLocalServiceImpl
 	Order order = OrderFactoryUtil.desc(CREATEDATE);
 	query.addOrder(order);
 
-	return boukiRegisterInterestLocalService.dynamicQuery(query);
+	return boukiRegisterInterestPersistence.findWithDynamicQuery(query);
 
     }
     

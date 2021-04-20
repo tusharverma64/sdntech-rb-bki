@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 @Component(
 	immediate = true,

@@ -14,10 +14,10 @@
 
 package com.rb.bouki.contact.us.service.impl;
 
-import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Order;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -67,10 +67,10 @@ public class BoukiContactUsLocalServiceImpl
      * @param apiResponse
      * @return : BoukiContactUs Object
      */
-    public BoukiContactUs createContactUs(String email, String subject, String name, String message,
-	    Long companyId, Long groupId, String apiResponse) {
-	final Long id = CounterLocalServiceUtil.increment(BoukiContactUs.class.getName());
-	BoukiContactUs contactUsForm = boukiContactUsLocalService.createBoukiContactUs(id);
+    public BoukiContactUs createContactUs(String email, String subject, String name, String message, Long companyId,
+	    Long groupId, String apiResponse) {
+	final Long id = counterLocalService.increment(BoukiContactUs.class.getName());
+	BoukiContactUs contactUsForm = boukiContactUsPersistence.create(id);
 	contactUsForm.setEmailAddress(email);
 	contactUsForm.setName(name);
 	contactUsForm.setSubject(subject);
@@ -80,7 +80,7 @@ public class BoukiContactUsLocalServiceImpl
 	contactUsForm.setCompanyId(companyId);
 	contactUsForm.setApiResponse(apiResponse);
 
-	return boukiContactUsLocalService.addBoukiContactUs(contactUsForm);
+	return boukiContactUsPersistence.update(contactUsForm);
     }
 
     
@@ -93,9 +93,8 @@ public class BoukiContactUsLocalServiceImpl
      * @param locale
      * @return
      */
-    public List<BoukiContactUs> getQueryResult(String searchText, String fromDate, String toDate, Locale locale)
-	     {
-	DynamicQuery query = boukiContactUsLocalService.dynamicQuery();
+    public List<BoukiContactUs> getQueryResult(String searchText, String fromDate, String toDate, Locale locale) {
+	DynamicQuery query = DynamicQueryFactoryUtil.forClass(BoukiContactUs.class, getClassLoader());
 	if (Validator.isNotNull(fromDate) && Validator.isNotNull(toDate)) {
 	    query.add(RestrictionsFactoryUtil.sqlRestriction(CREATEDATE + " >= '" + fromDate + "'"));
 	    query.add(RestrictionsFactoryUtil.sqlRestriction(CREATEDATE + " <= '" + toDate + "'"));
@@ -110,8 +109,8 @@ public class BoukiContactUsLocalServiceImpl
 	Order order = OrderFactoryUtil.desc(CREATEDATE);
 	query.addOrder(order);
 
-	return boukiContactUsLocalService.dynamicQuery(query);
+	return boukiContactUsPersistence.findWithDynamicQuery(query);
 
     }
-    
+
 }

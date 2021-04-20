@@ -1,7 +1,7 @@
 package com.rb.bouki.register.interest.admin.constants;
 
 /**
- * @author tushar
+ * @author Liferay
  */
 public class RbBoukiRegisterInterestAdminPanelCategoryKeys {
 

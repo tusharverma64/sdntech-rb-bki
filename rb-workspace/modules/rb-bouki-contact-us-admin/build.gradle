@@ -5,8 +5,6 @@ dependencies {
 
 	cssBuilder group: "com.liferay", name: "com.liferay.css.builder", version: "3.0.2"
 	
-//	// https://mvnrepository.com/artifact/org.apache.poi/poi
 //	compileInclude   group: 'org.apache.poi', name: 'poi', version: '3.7'
-//	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
 //	compileInclude   group: 'org.apache.poi', name: 'poi-ooxml', version: '3.9'
 }

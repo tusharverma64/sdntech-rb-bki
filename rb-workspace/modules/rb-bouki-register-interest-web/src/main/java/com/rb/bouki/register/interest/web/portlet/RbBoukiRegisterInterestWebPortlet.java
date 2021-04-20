@@ -3,6 +3,7 @@ package com.rb.bouki.register.interest.web.portlet;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -64,10 +65,16 @@ public class RbBoukiRegisterInterestWebPortlet extends MVCPortlet {
 	_log.debug("This is serve resource method....");
 
 	final ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-	final String phoneNumber = ParamUtil.getString(request, "phone_number");
-	final String countryCode = ParamUtil.getString(request, "countryCode");
-	final String email = ParamUtil.getString(request, "email");
-	final Boolean keepInform = ParamUtil.getBoolean(request, "keepInform");
+	final String phoneNumber = ParamUtil.getString(request, RbBoukiRegisterInterestWebPortletKeys.PHONE_NO);
+	final String countryCode = ParamUtil.getString(request, RbBoukiRegisterInterestWebPortletKeys.COUNTRY_CODE);
+	final String email = ParamUtil.getString(request, RbBoukiRegisterInterestWebPortletKeys.KEEP_INFORM);
+	final Boolean keepInform = ParamUtil.getBoolean(request, RbBoukiRegisterInterestWebPortletKeys.KEEP_INFORM);
+	if (_log.isDebugEnabled()) {
+	    _log.debug("email :" + email);
+	    _log.debug("phoneNumber :" + phoneNumber);
+	    _log.debug("countryCode :" + countryCode);
+	    _log.debug("keepInform :" + keepInform);
+	}
 	try {
 	    if (Validator.isNotNull(phoneNumber) && Validator.isNotNull(countryCode) && Validator.isNotNull(keepInform)
 		    && Validator.isNotNull(email)) {
@@ -77,15 +84,22 @@ public class RbBoukiRegisterInterestWebPortlet extends MVCPortlet {
 
 		if (Validator.isNotNull(boukiRegisterInterest)) {
 		    JSONObject obj = JSONFactoryUtil.createJSONObject();
-		    obj.put("message", "Data Received Successfully");
+		    obj.put(RbBoukiRegisterInterestWebPortletKeys.MESSAGE, LanguageUtil.get(themeDisplay.getLocale(),
+			    RbBoukiRegisterInterestWebPortletKeys.DATA_SAVED_SUCCESSFULLY));
 		    PrintWriter out = resourceResponse.getWriter();
 		    out.print(obj.toString());
 		}
+	    } else {
+		JSONObject obj = JSONFactoryUtil.createJSONObject();
+		obj.put(RbBoukiRegisterInterestWebPortletKeys.MESSAGE,
+			RbBoukiRegisterInterestWebPortletKeys.DATA_SAVED_FAILED);
+		PrintWriter out = resourceResponse.getWriter();
+		out.print(obj.toString());
 	    }
 	} catch (SystemException e) {
 	    _log.error(e.getMessage());
 	}
-	
+
 	super.serveResource(request, resourceResponse);
     }
 }
